@@ -44,12 +44,12 @@ import hudson.scm.ChangeLogSet.Entry;
  *
  * @author Kohsuke Kawaguchi
  */
-public class Updater {
+class Updater {
 	
 	private SCM scm;
 	private List<String> labels;
 	
-    private final Logger LOGGER = Logger.getLogger(Updater.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Updater.class.getName());
     //for reflection, until JENKINS-24141
     private static final String GET_CHANGESET_METHOD = "getChangeSets";
     private static final String CANNOT_ACCESS_GET_CHANGESET_METHOD = "cannot call "+GET_CHANGESET_METHOD;
@@ -88,7 +88,7 @@ public class Updater {
                 return true;
             }
             
-            Set<String> ids = selector.findIssueIds(build, this, site, listener);
+            Set<String> ids = selector.findIssueIds(build, site, listener);
 
             if (ids.isEmpty()) {
                 if (debug)
@@ -347,7 +347,7 @@ public class Updater {
      * {@link JiraSite#existsIssue(String)} here so that new projects
      * in JIRA can be detected.
      */
-    Set<String> findIssueIdsRecursive(Run<?, ?> build, Pattern pattern,
+    static Set<String> findIssueIdsRecursive(Run<?, ?> build, Pattern pattern,
                                                      TaskListener listener) {
         Set<String> ids = new HashSet<String>();
 
@@ -375,7 +375,7 @@ public class Updater {
     /**
      * @param pattern pattern to use to match issue ids
      */
-    void findIssues(Run<?, ?> build, Set<String> ids, Pattern pattern,
+    static void findIssues(Run<?, ?> build, Set<String> ids, Pattern pattern,
                            TaskListener listener) {
     	for(ChangeLogSet<? extends Entry> set : getChanges(build)) {
 	        for (Entry change : set) {
@@ -406,7 +406,7 @@ public class Updater {
         }
     }
 
-    private List<ChangeLogSet<? extends Entry>> getChanges(Run<?,?> run) {
+    private static List<ChangeLogSet<? extends Entry>> getChanges(Run<?,?> run) {
         if(run instanceof AbstractBuild) {
         	return ((AbstractBuild<?,?>) run).getChangeSets();
         } else if(run == null) {
@@ -451,7 +451,7 @@ public class Updater {
 		}
 	}
 
-	private Map<AbstractProject,DependencyChange> getDependencyChanges(Run<?,?> run) {
+	private static Map<AbstractProject,DependencyChange> getDependencyChanges(Run<?,?> run) {
     	AbstractBuild<?,?> build = null;
         if(run instanceof AbstractBuild)
         	return ((AbstractBuild) run).getDependencyChanges((AbstractBuild)run);
@@ -463,5 +463,5 @@ public class Updater {
     private SCM getScm() {
     	return scm;
     }
-    
+
 }

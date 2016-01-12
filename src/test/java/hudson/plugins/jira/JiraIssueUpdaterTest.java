@@ -3,9 +3,6 @@ package hudson.plugins.jira;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
@@ -23,7 +20,7 @@ public class JiraIssueUpdaterTest {
         class TestSelector extends UpdaterIssueSelector {
 
             @Override
-            public Set<String> findIssueIds(Run<?, ?> run, @Nonnull Updater updater, JiraSite site, TaskListener listener) {
+            public Set<String> findIssueIds(Run<?, ?> run, JiraSite site, TaskListener listener) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
